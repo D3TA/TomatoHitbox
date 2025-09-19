@@ -1,1 +1,32 @@
-print("something")
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+// This is the actual Lua code for your main loader.
+// You can make this as complex as you need.
+const mainLoaderCode = `
+    print("Loader has been successfully loaded!");
+    -- Add more code here, like fetching specific tools
+    -- based on the 'key' you received from the URL.
+    -- For example:
+    -- if key == "Tool 1" then
+    --     -- load the code for Tool 1
+    -- end
+`;
+
+// The endpoint that your Roblox ModuleScript will hit.
+app.get('/loader', (req, res) => {
+    // You can get the key and username from the query parameters.
+    const key = req.query.key;
+    const user = req.query.user;
+
+    console.log("Loader requested with key:", key, "and user:", user);
+
+    // Send the Lua code back to Roblox.
+    res.send(mainLoaderCode);
+});
+
+// Start the server.
+app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
+});
